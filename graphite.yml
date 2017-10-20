@@ -1,0 +1,16 @@
+---
+- name: Setup and install Graphite DB setup
+  become: True
+  hosts: graphite-storage
+  tasks:
+    - import_role:
+        name: graphite
+  vars:
+      graphite_install_path: "/opt/graphite"
+      graphite_secret_key: 'blabla'
+      graphite_enable_carbon_relay: False
+      uwsgi_graphite_extraopts:
+          - option: http
+            value: '0.0.0.0:3032'
+          - option: route
+            value: '^/static/(.*)$ static:{{ graphite_install_path }}/webapp/content/$1'

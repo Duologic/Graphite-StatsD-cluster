@@ -1,0 +1,14 @@
+---
+- name: Setup and install Graphite DB setup
+  become: True
+  hosts: carbon-relay
+  tasks:
+    - import_role:
+        name: graphite
+  vars:
+      graphite_secret_key: 'blabla'
+      #graphite_relay_destinations: '{{ carbon_relay_destinations }}'
+      #graphite_aggregator_destinations: '{{ carbon_relay_destinations }}'
+      graphite_enable_uwsgi: False
+      graphite_enable_carbon_cache: False
+      graphite_enable_carbon_relay: True
