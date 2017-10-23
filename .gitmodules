@@ -1,3 +1,12 @@
 [submodule "roles/graphite"]
 	path = roles/graphite
 	url = git@github.com:Duologic/ansible-graphite.git
+[submodule "roles/packagecloud"]
+	path = roles/packagecloud
+	url = git@github.com:Duologic/packagecloud-ansible-role.git
+[submodule "roles/statsdaemon"]
+	path = roles/statsdaemon
+	url = git@github.com:Duologic/ansible-role-statsdaemon.git
+[submodule "roles/carbon-relay-ng"]
+	path = roles/carbon-relay-ng
+	url = git@github.com:Duologic/ansible-role-carbon-relay-ng.git

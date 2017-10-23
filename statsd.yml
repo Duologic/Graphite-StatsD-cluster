@@ -1,7 +1,7 @@
 ---
 - name: Setup and install Statsdaemon
   become: True
-  hosts: carbon-relay
+  hosts: statsd
   tasks:
     - name: install raintank repository
       import_role:
@@ -11,4 +11,4 @@
         os: 'centos'
         version: 7
     - import_role:
-        name: carbon-relay-ng
+        name: statsdaemon

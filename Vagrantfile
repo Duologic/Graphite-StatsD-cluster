@@ -9,18 +9,18 @@ Vagrant.configure("2") do |config|
    }
 
     # StatsD node
-    #config.vm.define "statsd" do |machine|
-    #    machine.vm.hostname = "statsd"
-    #    machine.vm.network "forwarded_port", guest: 8125, host: 8125, protocol: 'tcp'
-    #    machine.vm.network "forwarded_port", guest: 8125, host: 8125, protocol: 'udp'
-    #    machine.vm.network "private_network", ip: "192.168.34.9"
-    #    machine.vm.provision :ansible do |ansible|
-    #        ansible.groups = ansible_groups
-    #        ansible.limit = "all"
-    #        ansible.playbook = "statsd.yml"
-    #        #ansible.extra_vars = ansible_extra_vars
-    #    end
-    #end
+    config.vm.define "statsd" do |machine|
+        machine.vm.hostname = "statsd"
+        machine.vm.network "forwarded_port", guest: 8125, host: 8125, protocol: 'tcp'
+        machine.vm.network "forwarded_port", guest: 8125, host: 8125, protocol: 'udp'
+        machine.vm.network "private_network", ip: "192.168.34.9"
+        machine.vm.provision :ansible do |ansible|
+            ansible.groups = ansible_groups
+            ansible.limit = "all"
+            ansible.playbook = "statsd.yml"
+            #ansible.extra_vars = ansible_extra_vars
+        end
+    end
 
     # Carbon-relay node
     config.vm.define "carbon-relay" do |machine|
