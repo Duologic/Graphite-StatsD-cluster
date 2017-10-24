@@ -12,3 +12,11 @@
         version: 7
     - import_role:
         name: carbon-relay-ng
+      vars:
+        carbon_relay_ng_routers:
+            - key: 'carbon-default'
+              type: 'sendAllMatch'
+              prefix: ''
+              substr: ''
+              regex: ''
+              destinations: '{{ carbon_caches }}'

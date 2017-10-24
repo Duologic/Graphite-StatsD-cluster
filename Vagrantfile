@@ -7,6 +7,12 @@ Vagrant.configure("2") do |config|
    ansible_groups = {
        "graphite-storage" => ["graphite0-db", "graphite1-db"],
    }
+   ansible_extra_vars = {
+       carbon_caches: [
+           '192.168.34.10:2003 spool=true pickle=false',
+           '192.168.34.11:2003 spool=true pickle=false',
+       ]
+   }
 
     # StatsD node
     config.vm.define "statsd" do |machine|
@@ -32,7 +38,7 @@ Vagrant.configure("2") do |config|
             ansible.groups = ansible_groups
             ansible.limit = "all"
             ansible.playbook = "carbon.yml"
-            #ansible.extra_vars = ansible_extra_vars
+            ansible.extra_vars = ansible_extra_vars
         end
     end
 
