@@ -12,3 +12,5 @@
         version: 7
     - import_role:
         name: statsdaemon
+      vars:
+        statsdaemon_graphite_addr: '{{ carbon_relay }}'
