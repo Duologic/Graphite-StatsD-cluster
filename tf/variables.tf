@@ -1,11 +1,16 @@
-variable "region" {
-  default = "eu-west-1"
-}
-
 variable "username" {
   default = "jeroen.opteynde"
 }
 
+variable "aws_profile" {
+  default = "unleashed-staging"
+}
+
+variable "aws_region" {
+  default = "eu-west-1"
+}
+
 locals {
-  public_key = "${file("~/.ssh/id_rsa.pub")}"
+  public_key  = "${file("~/.ssh/id_rsa.pub")}"
+  private_key = "${file("~/.ssh/id_rsa")}"
 }
