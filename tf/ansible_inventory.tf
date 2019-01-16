@@ -20,6 +20,8 @@ data "template_file" "ansible_inventory" {
   vars {
     env                 = "${var.aws_profile}"
     monitor_relay_hosts = "${join("",data.template_file.inventory-monitor-relay.*.rendered)}"
+    carbon_caches       = "[127.0.0.1]"
+    carbon_relay        = "127.0.0.1"
   }
 }
 

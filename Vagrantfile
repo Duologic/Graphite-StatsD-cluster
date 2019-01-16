@@ -6,33 +6,22 @@ Vagrant.configure("2") do |config|
 
    ansible_groups = {
        "graphite-storage" => ["graphite0-db", "graphite1-db"],
-   }
-   ansible_extra_vars = {
-       carbon_relay: '192.168.34.9:2003',
-       carbon_caches: [
-           '192.168.34.10:2003 spool=true pickle=false',
-           '192.168.34.11:2003 spool=true pickle=false',
-       ]
+       "monitor-relay" => ["monitor-relay1"],
+       "monitor-relay:vars" => {
+           "carbon_caches" => [
+               '192.168.34.10',
+               '192.168.34.11',
+           ],
+           "carbon_relay" => '192.168.34.9',
+       },
    }
 
-    # StatsD node
-    config.vm.define "statsd" do |machine|
-        machine.vm.hostname = "statsd"
+    # monitor-relay node
+    config.vm.define "monitor-relay1" do |machine|
+        machine.vm.hostname = "monitor-relay1"
         machine.vm.network "forwarded_port", guest: 8125, host: 8125, protocol: 'tcp'
         machine.vm.network "forwarded_port", guest: 8125, host: 8125, protocol: 'udp'
         machine.vm.network "forwarded_port", guest: 8126, host: 8126
-        machine.vm.network "private_network", ip: "192.168.34.8"
-        machine.vm.provision :ansible do |ansible|
-            ansible.groups = ansible_groups
-            ansible.limit = "all"
-            ansible.playbook = "statsd.yml"
-            ansible.extra_vars = ansible_extra_vars
-        end
-    end
-
-    # Carbon-relay node
-    config.vm.define "carbon-relay" do |machine|
-        machine.vm.hostname = "carbon-relay"
         machine.vm.network "forwarded_port", guest: 8081, host: 8081
         machine.vm.network "forwarded_port", guest: 2003, host: 2003
         machine.vm.network "forwarded_port", guest: 2013, host: 2013
@@ -42,7 +31,11 @@ Vagrant.configure("2") do |config|
             ansible.groups = ansible_groups
             ansible.limit = "all"
             ansible.playbook = "carbon.yml"
-            ansible.extra_vars = ansible_extra_vars
+        end
+        machine.vm.provision :ansible do |ansible|
+            ansible.groups = ansible_groups
+            ansible.limit = "all"
+            ansible.playbook = "statsd.yml"
         end
     end
 
@@ -60,7 +53,6 @@ Vagrant.configure("2") do |config|
                     ansible.groups = ansible_groups
                     ansible.limit = "all"
                     ansible.playbook = "graphite.yml"
-                    #ansible.extra_vars = ansible_extra_vars
                 end
             end
         end

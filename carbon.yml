@@ -1,7 +1,7 @@
 ---
-- name: Setup and install Statsdaemon
+- name: Setup and install Carbon-relay
   become: True
-  hosts: carbon-relay
+  hosts: monitor-relay
   tasks:
     - name: install raintank repository
       import_role:
@@ -15,8 +15,8 @@
       vars:
         carbon_relay_ng_routers:
             - key: 'carbon-default'
-              type: 'sendAllMatch'
+              type: 'consistentHashing'
               prefix: ''
               substr: ''
               regex: ''
-              destinations: '{{ carbon_caches }}'
+              destinations: '{{ carbon_caches | zip_longest([], fillvalue=":2004 spool=true pickle=true") | map("join") | list  }}'

@@ -1,7 +1,7 @@
 ---
 - name: Setup and install Statsdaemon
   become: True
-  hosts: statsd
+  hosts: monitor-relay
   tasks:
     - name: install raintank repository
       import_role:
@@ -13,4 +13,4 @@
     - import_role:
         name: statsdaemon
       vars:
-        statsdaemon_graphite_addr: '{{ carbon_relay }}'
+        statsdaemon_graphite_addr: '{{ carbon_relay }}:2003'
