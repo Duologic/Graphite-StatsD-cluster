@@ -14,3 +14,7 @@ locals {
   public_key  = "${file("~/.ssh/id_rsa.pub")}"
   private_key = "${file("~/.ssh/id_rsa")}"
 }
+
+variable "monitor_relay_count" {
+  default = 2
+}

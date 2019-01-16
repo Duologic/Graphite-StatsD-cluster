@@ -1,8 +1,10 @@
 resource "aws_eip" "monitor-relay-ip" {
-  instance = "${aws_instance.monitor-relay.id}"
+  count    = "${var.monitor_relay_count}"
+  instance = "${aws_instance.monitor-relay.*.id[count.index]}"
 }
 
 resource "aws_instance" "monitor-relay" {
+  count         = "${var.monitor_relay_count}"
   ami           = "ami-3548444c"                   // CentOS 7 AMI
   instance_type = "t2.micro"                       // 1 vCPU, 1GB RAM
   key_name      = "${aws_key_pair.local.key_name}"
@@ -17,7 +19,8 @@ resource "aws_instance" "monitor-relay" {
   }
 
   tags = {
-    Name     = "monitor-relay"
+    Name     = "monitor-relay${count.index}"
+    Role     = "monitor-relay"
     Username = "centos"
   }
 
