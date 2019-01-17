@@ -1,3 +1,8 @@
+locals {
+  public_key  = "${file("~/.ssh/id_rsa.pub")}"
+  private_key = "${file("~/.ssh/id_rsa")}"
+}
+
 variable "username" {
   default = "jeroen.opteynde"
 }
@@ -10,11 +15,14 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-locals {
-  public_key  = "${file("~/.ssh/id_rsa.pub")}"
-  private_key = "${file("~/.ssh/id_rsa")}"
-}
-
 variable "monitor_relay_count" {
   default = 1
+}
+
+variable "aws_base_ami" {
+  default = "ami-00035f41c82244dab" // Ubuntu 18.04 LTS
+}
+
+variable "aws_instance_type" {
+  default = "t2.micro" // 1 vCPU, 1GB RAM
 }

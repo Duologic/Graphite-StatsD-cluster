@@ -8,8 +8,8 @@
         name: packagecloud
       vars:
         repository: 'raintank/raintank'
-        os: 'centos'
-        version: 7
+        os: 'ubuntu'
+        version: 'xenial'
     - import_role:
         name: carbon-relay-ng
       vars:

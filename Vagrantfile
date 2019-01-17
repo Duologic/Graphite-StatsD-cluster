@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-   config.vm.box = "centos/7"
+   config.vm.box = "ubuntu/bionic64"
 
    ansible_groups = {
        "graphite-storage" => ["graphite0-db", "graphite1-db"],
@@ -59,7 +59,6 @@ Vagrant.configure("2") do |config|
     end
 
     config.vm.provision "shell", inline: <<-SHELL
-        yum install -y epel-release
-        yum install -y htop vim telnet curl
+        sudo apt-get install -y htop vim telnet curl python
     SHELL
 end

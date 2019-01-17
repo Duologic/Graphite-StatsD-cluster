@@ -5,8 +5,8 @@ resource "aws_eip" "monitor-relay-ip" {
 
 resource "aws_instance" "monitor-relay" {
   count         = "${var.monitor_relay_count}"
-  ami           = "ami-3548444c"                   // CentOS 7 AMI
-  instance_type = "t2.micro"                       // 1 vCPU, 1GB RAM
+  ami           = "${var.aws_base_ami}"
+  instance_type = "${var.aws_instance_type}"
   key_name      = "${aws_key_pair.local.key_name}"
 
   vpc_security_group_ids = [
@@ -23,7 +23,7 @@ resource "aws_instance" "monitor-relay" {
   tags = {
     Name     = "monitor-relay${count.index}"
     Role     = "monitor-relay"
-    Username = "centos"
+    Username = "ubuntu"
   }
 
   connection {
@@ -32,24 +32,18 @@ resource "aws_instance" "monitor-relay" {
     agent = true
   }
 
-  provisioner "local-exec" {
-    command = "echo export AWS_PROFILE=${var.aws_profile} > files/bash-prompt.sh.tmp && cat files/bash-prompt-default.sh >> files/bash-prompt.sh.tmp"
-  }
-
   provisioner "file" {
-    source      = "files/bash-prompt.sh.tmp"
+    content     = "${data.template_file.bash_prompt.rendered}"
     destination = "/tmp/bash-prompt.sh"
-  }
-
-  provisioner "local-exec" {
-    command = "rm files/bash-prompt.sh.tmp"
   }
 
   provisioner "remote-exec" {
     inline = [
       "sudo mv /tmp/bash-prompt.sh /etc/profile.d/bash-prompt.sh",
-      "sudo yum install -y epel-release",
-      "sudo yum install -y htop vim telnet curl",
+      "sudo chown +x /etc/profile.d/bash-prompt.sh",
+      "echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc",
+      "sudo su -c 'echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc'",
+      "sudo apt-get install -y htop vim telnet curl python",
       "sudo hostnamectl set-hostname ${self.tags.Name}",
     ]
   }
