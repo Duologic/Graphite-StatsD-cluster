@@ -12,6 +12,8 @@ resource "aws_instance" "monitor-relay" {
   vpc_security_group_ids = [
     "${aws_security_group.allow_web.id}",
     "${aws_security_group.allow_ssh.id}",
+    "${aws_security_group.allow_statsd.id}",
+    "${aws_security_group.allow_carbon.id}",
   ]
 
   root_block_device = {
