@@ -1,13 +1,14 @@
 resource "aws_eip" "monitor-relay-ip" {
-  count    = "${var.monitor_relay_count}"
+  count    = "${var.monitor-relay_count}"
   instance = "${aws_instance.monitor-relay.*.id[count.index]}"
 }
 
 resource "aws_instance" "monitor-relay" {
-  count         = "${var.monitor_relay_count}"
-  ami           = "${var.aws_base_ami}"
-  instance_type = "${var.aws_instance_type}"
-  key_name      = "${aws_key_pair.local.key_name}"
+  count             = "${var.monitor-relay_count}"
+  ami               = "${var.aws_base_ami}"
+  instance_type     = "${var.aws_instance_type}"
+  availability_zone = "${var.aws_availability_zone}"
+  key_name          = "${aws_key_pair.local.key_name}"
 
   vpc_security_group_ids = [
     "${aws_security_group.allow_web.id}",
@@ -41,9 +42,11 @@ resource "aws_instance" "monitor-relay" {
     inline = [
       "sudo mv /tmp/bash-prompt.sh /etc/profile.d/bash-prompt.sh",
       "sudo chown +x /etc/profile.d/bash-prompt.sh",
-      "echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc",
-      "sudo su -c 'echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc'",
+
+      //"echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc",
+      //"sudo su -c 'echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc'",
       "sudo apt-get install -y htop vim telnet curl python",
+
       "sudo hostnamectl set-hostname ${self.tags.Name}",
     ]
   }

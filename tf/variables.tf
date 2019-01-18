@@ -15,7 +15,15 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
-variable "monitor_relay_count" {
+variable "aws_availability_zone" {
+  default = "eu-west-1b"
+}
+
+variable "monitor-relay_count" {
+  default = 1
+}
+
+variable "graphite-db_count" {
   default = 1
 }
 

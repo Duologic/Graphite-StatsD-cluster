@@ -3,7 +3,7 @@ provider "local" {
 }
 
 data "template_file" "inventory-monitor-relay" {
-  count    = "${var.monitor_relay_count}"
+  count    = "${var.monitor-relay_count}"
   template = "${file("templates/hostname.tpl")}"
 
   vars {
@@ -14,14 +14,29 @@ data "template_file" "inventory-monitor-relay" {
   }
 }
 
+data "template_file" "inventory-graphite-db" {
+  count    = "${var.graphite-db_count}"
+  template = "${file("templates/hostname.tpl")}"
+
+  vars {
+    name         = "${aws_instance.graphite-db.*.tags.Name[count.index]}"
+    ansible_host = "${aws_eip.graphite-db-ip.*.public_ip[count.index]}"
+    ansible_user = "${aws_instance.graphite-db.*.tags.Username[count.index]}"
+    extra        = ""
+  }
+}
+
 data "template_file" "ansible_inventory" {
   template = "${file("templates/ansible_inventory.tpl")}"
 
   vars {
     env                 = "${var.aws_profile}"
-    monitor_relay_hosts = "${join("",data.template_file.inventory-monitor-relay.*.rendered)}"
-    carbon_caches       = "['127.0.0.1', '127.0.0.1']"
+    monitor-relay_hosts = "${join("",data.template_file.inventory-monitor-relay.*.rendered)}"
+    graphite-db_hosts   = "${join("",data.template_file.inventory-graphite-db.*.rendered)}"
+    carbon_caches       = "[${join(",",formatlist("'%s'", aws_eip.graphite-db-ip.*.public_ip))}]"
     carbon_relay        = "127.0.0.1"
+
+    //carbon_caches       = "['127.0.0.1', '127.0.0.1']"
   }
 }
 
