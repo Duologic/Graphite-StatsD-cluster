@@ -15,7 +15,7 @@
       vars:
         carbon_relay_ng_routers:
             - key: 'carbon-default'
-              type: 'consistentHashing'
+              type: 'sendAllMatch'
               prefix: ''
               substr: ''
               regex: ''

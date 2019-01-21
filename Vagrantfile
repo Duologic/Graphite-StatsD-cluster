@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
    config.vm.box = "ubuntu/bionic64"
 
    ansible_groups = {
-       "graphite-storage" => ["graphite0-db", "graphite1-db"],
+       "graphite-storage" => ["graphite-db0", "graphite-db1"],
        "monitor-relay" => ["monitor-relay1"],
        "monitor-relay:vars" => {
            "carbon_caches" => [
@@ -41,11 +41,11 @@ Vagrant.configure("2") do |config|
 
     # Graphite DB node
     (0..1).each do |machine_id|
-        config.vm.define "graphite#{machine_id}-db" do |machine|
+        config.vm.define "graphite-db#{machine_id}" do |machine|
             machine.vm.provider "virtualbox" do |v|
                 v.memory = 1024
             end
-            machine.vm.hostname = "graphite#{machine_id}-db"
+            machine.vm.hostname = "graphite-db#{machine_id}"
             machine.vm.network "forwarded_port", guest: 3032, host: "303#{machine_id}"
             machine.vm.network "private_network", ip: "192.168.34.1#{machine_id}"
             if machine_id == 1
