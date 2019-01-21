@@ -14,6 +14,13 @@ Vagrant.configure("2") do |config|
            ],
            "carbon_relay" => '192.168.34.9',
        },
+       "graphite-frontend" => ["graphite-frontend1"],
+       "graphite-frontend:vars" => {
+           "cluster_servers" => [
+               '192.168.34.10',
+               '192.168.34.11',
+           ],
+       },
    }
 
     # monitor-relay node
@@ -51,10 +58,24 @@ Vagrant.configure("2") do |config|
             if machine_id == 1
                 machine.vm.provision :ansible do |ansible|
                     ansible.groups = ansible_groups
-                    ansible.limit = "all"
+                    ansible.limit = "graphite-storage"
                     ansible.playbook = "graphite.yml"
                 end
             end
+        end
+    end
+
+    config.vm.define "graphite-frontend1" do |machine|
+        machine.vm.provider "virtualbox" do |v|
+            v.memory = 1024
+        end
+        machine.vm.hostname = "graphite-frontend"
+        machine.vm.network "forwarded_port", guest: 3032, host: "3040"
+        machine.vm.network "private_network", ip: "192.168.34.20"
+        machine.vm.provision :ansible do |ansible|
+            ansible.groups = ansible_groups
+            ansible.limit = "graphite-frontend"
+            ansible.playbook = "graphite.yml"
         end
     end
 

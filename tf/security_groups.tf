@@ -63,3 +63,34 @@ resource "aws_security_group" "allow_carbon" {
     cidr_blocks = "${var.ip_whitelist}"
   }
 }
+
+resource "aws_security_group" "allow_carbon_forwards" {
+  name        = "allow_carbon_forwards"
+  description = "Allow Graphite Carbon forwards from the relay"
+
+  ingress {
+    from_port   = 2003
+    to_port     = 2004
+    protocol    = "tcp"
+    cidr_blocks = ["${formatlist("%s/32", aws_instance.monitor-relay.*.private_ip)}"]
+  }
+
+  ingress {
+    from_port   = 3032
+    to_port     = 3032
+    protocol    = "tcp"
+    cidr_blocks = ["${formatlist("%s/32", aws_instance.graphite-frontend.*.private_ip)}"]
+  }
+}
+
+resource "aws_security_group" "allow_graphite_web" {
+  name        = "allow_graphite_web"
+  description = "Allow Graphite web access from home/office"
+
+  ingress {
+    from_port   = 3032                  // Graphite-web interface (also API)
+    to_port     = 3032
+    protocol    = "tcp"
+    cidr_blocks = "${var.ip_whitelist}"
+  }
+}

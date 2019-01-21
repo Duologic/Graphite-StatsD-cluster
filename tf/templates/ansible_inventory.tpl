@@ -5,8 +5,16 @@ ${monitor-relay_hosts}
 carbon_caches=${carbon_caches}
 carbon_relay=${carbon_relay}
 
-[graphite-db]
+[graphite-storage]
 ${graphite-db_hosts}
+
+[graphite-frontend]
+${graphite-frontend_hosts}
+
+[graphite-frontend:vars]
+cluster_servers=${cluster_servers}
 
 [${env}:children]
 monitor-relay
+graphite-storage
+graphite-frontend

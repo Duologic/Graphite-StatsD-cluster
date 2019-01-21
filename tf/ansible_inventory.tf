@@ -26,17 +26,29 @@ data "template_file" "inventory-graphite-db" {
   }
 }
 
+data "template_file" "inventory-graphite-frontend" {
+  count    = "${var.graphite-frontend_count}"
+  template = "${file("templates/hostname.tpl")}"
+
+  vars {
+    name         = "${aws_instance.graphite-frontend.*.tags.Name[count.index]}"
+    ansible_host = "${aws_eip.graphite-frontend-ip.*.public_ip[count.index]}"
+    ansible_user = "${aws_instance.graphite-frontend.*.tags.Username[count.index]}"
+    extra        = ""
+  }
+}
+
 data "template_file" "ansible_inventory" {
   template = "${file("templates/ansible_inventory.tpl")}"
 
   vars {
-    env                 = "${var.aws_profile}"
-    monitor-relay_hosts = "${join("",data.template_file.inventory-monitor-relay.*.rendered)}"
-    graphite-db_hosts   = "${join("",data.template_file.inventory-graphite-db.*.rendered)}"
-    carbon_caches       = "[${join(",",formatlist("'%s'", aws_eip.graphite-db-ip.*.public_ip))}]"
-    carbon_relay        = "127.0.0.1"
-
-    //carbon_caches       = "['127.0.0.1', '127.0.0.1']"
+    env                     = "${var.aws_profile}"
+    monitor-relay_hosts     = "${join("",data.template_file.inventory-monitor-relay.*.rendered)}"
+    graphite-db_hosts       = "${join("",data.template_file.inventory-graphite-db.*.rendered)}"
+    graphite-frontend_hosts = "${join("",data.template_file.inventory-graphite-frontend.*.rendered)}"
+    carbon_caches           = "[${join(",",formatlist("'%s'", aws_instance.graphite-db.*.private_ip))}]"
+    cluster_servers         = "[${join(",",formatlist("'%s'", aws_instance.graphite-db.*.private_ip))}]"
+    carbon_relay            = "127.0.0.1"
   }
 }
 

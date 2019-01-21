@@ -14,3 +14,21 @@
             value: '0.0.0.0:3032'
           - option: static-map
             value: '/static={{ graphite_install_path }}/webapp/content'
+
+- name: Setup and install Graphite Frontend setup
+  become: True
+  hosts: graphite-frontend
+  tasks:
+    - import_role:
+        name: graphite
+  vars:
+      graphite_install_path: '/opt/graphite'
+      graphite_time_zone: 'Europe/Brussels'
+      graphite_enable_carbon_cache: False
+      graphite_enable_carbon_relay: False
+      graphite_cluster_servers: '{{ cluster_servers | zip_longest([], fillvalue=":3032") | map("join") | list }}'
+      uwsgi_graphite_extraopts:
+          - option: http
+            value: '0.0.0.0:3032'
+          - option: static-map
+            value: '/static={{ graphite_install_path }}/webapp/content'

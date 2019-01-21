@@ -9,11 +9,12 @@ resource "aws_instance" "graphite-db" {
   instance_type     = "${var.aws_instance_type}"
   availability_zone = "${var.aws_availability_zone}"
   key_name          = "${aws_key_pair.local.key_name}"
-  user_data         = "${data.template_file.whisper-disk-user_data.*.rendered[count.index]}"
+  user_data         = "${data.template_file.graphite-disk-user_data.*.rendered[count.index]}"
 
   vpc_security_group_ids = [
     "${aws_security_group.allow_web.id}",
     "${aws_security_group.allow_ssh.id}",
+    "${aws_security_group.allow_carbon_forwards.id}",
   ]
 
   root_block_device = {
@@ -51,7 +52,7 @@ resource "aws_instance" "graphite-db" {
   }
 }
 
-resource "aws_ebs_volume" "whisper-disk" {
+resource "aws_ebs_volume" "graphite-disk" {
   count             = "${var.graphite-db_count}"
   availability_zone = "${var.aws_availability_zone}"
   size              = 100
@@ -59,25 +60,25 @@ resource "aws_ebs_volume" "whisper-disk" {
   iops              = 100
 
   tags = {
-    Name       = "whisper-disk${count.index}"
+    Name       = "graphite-disk${count.index}"
     DeviceName = "/dev/sdh"
     Device     = "/dev/xvdh"
   }
 }
 
-resource "aws_volume_attachment" "whisper-disk-attach" {
+resource "aws_volume_attachment" "graphite-disk-attach" {
   count       = "${var.graphite-db_count}"
-  device_name = "${aws_ebs_volume.whisper-disk.*.tags.DeviceName[count.index]}"
-  volume_id   = "${aws_ebs_volume.whisper-disk.*.id[count.index]}"
+  device_name = "${aws_ebs_volume.graphite-disk.*.tags.DeviceName[count.index]}"
+  volume_id   = "${aws_ebs_volume.graphite-disk.*.id[count.index]}"
   instance_id = "${aws_instance.graphite-db.*.id[count.index]}"
 }
 
-data "template_file" "whisper-disk-user_data" {
+data "template_file" "graphite-disk-user_data" {
   count    = "${var.graphite-db_count}"
-  template = "${file("templates/mount_whisper.sh.tpl")}"
+  template = "${file("templates/mount_aws_volume.sh.tpl")}"
 
   vars {
-    DEVICE      = "${aws_ebs_volume.whisper-disk.*.tags.Device[count.index]}"
-    MOUNT_POINT = "/whisper"
+    DEVICE      = "${aws_ebs_volume.graphite-disk.*.tags.Device[count.index]}"
+    MOUNT_POINT = "/opt/graphite"
   }
 }
