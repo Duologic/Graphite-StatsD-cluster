@@ -1,7 +1,3 @@
-variable "ip_whitelist" {
-  default = ["84.193.109.126/32", "84.199.16.2/32"]
-}
-
 resource "aws_security_group" "allow_web" {
   name        = "allow_web"
   description = "Allow reguler internet access"
@@ -11,6 +7,13 @@ resource "aws_security_group" "allow_web" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    ipv6_cidr_blocks = ["::/0"]
   }
 }
 

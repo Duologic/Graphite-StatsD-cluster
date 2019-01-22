@@ -20,7 +20,7 @@ data "template_file" "inventory-graphite-db" {
 
   vars {
     name         = "${aws_instance.graphite-db.*.tags.Name[count.index]}"
-    ansible_host = "${aws_eip.graphite-db-ip.*.public_ip[count.index]}"
+    ansible_host = "${aws_instance.graphite-db.*.public_ip[count.index]}"
     ansible_user = "${aws_instance.graphite-db.*.tags.Username[count.index]}"
     extra        = ""
   }

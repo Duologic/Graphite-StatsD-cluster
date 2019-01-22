@@ -1,8 +1,3 @@
-resource "aws_eip" "graphite-db-ip" {
-  count    = "${var.graphite-db_count}"
-  instance = "${aws_instance.graphite-db.*.id[count.index]}"
-}
-
 resource "aws_instance" "graphite-db" {
   count             = "${var.graphite-db_count}"
   ami               = "${var.aws_base_ami}"
@@ -42,8 +37,8 @@ resource "aws_instance" "graphite-db" {
     inline = [
       "sudo mv /tmp/bash-prompt.sh /etc/profile.d/bash-prompt.sh",
       "sudo chown +x /etc/profile.d/bash-prompt.sh",
+      "echo 'source /etc/profile.d/bash-prompt.sh' >> ~/.bashrc",
 
-      //"echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc",
       //"sudo su -c 'echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc'",
       "sudo apt-get install -y htop vim telnet curl python",
 

@@ -1,8 +1,3 @@
-resource "aws_eip" "monitor-relay-ip" {
-  count    = "${var.monitor-relay_count}"
-  instance = "${aws_instance.monitor-relay.*.id[count.index]}"
-}
-
 resource "aws_instance" "monitor-relay" {
   count             = "${var.monitor-relay_count}"
   ami               = "${var.aws_base_ami}"
@@ -42,12 +37,17 @@ resource "aws_instance" "monitor-relay" {
     inline = [
       "sudo mv /tmp/bash-prompt.sh /etc/profile.d/bash-prompt.sh",
       "sudo chown +x /etc/profile.d/bash-prompt.sh",
+      "echo 'source /etc/profile.d/bash-prompt.sh' >> ~/.bashrc",
 
-      //"echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc",
       //"sudo su -c 'echo source\ /etc/profile.d/bash-prompt.sh >> ~/.bashrc'",
       "sudo apt-get install -y htop vim telnet curl python",
 
       "sudo hostnamectl set-hostname ${self.tags.Name}",
     ]
   }
+}
+
+resource "aws_eip" "monitor-relay-ip" {
+  count    = "${var.monitor-relay_count}"
+  instance = "${aws_instance.monitor-relay.*.id[count.index]}"
 }

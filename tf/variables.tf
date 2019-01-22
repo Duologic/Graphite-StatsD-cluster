@@ -38,3 +38,7 @@ variable "aws_base_ami" {
 variable "aws_instance_type" {
   default = "t2.micro" // 1 vCPU, 1GB RAM
 }
+
+variable "ip_whitelist" {
+  default = ["84.193.109.126/32", "84.199.16.2/32"]
+}
