@@ -96,4 +96,11 @@ resource "aws_security_group" "allow_graphite_web" {
     protocol    = "tcp"
     cidr_blocks = "${var.ip_whitelist}"
   }
+
+  ingress {
+    from_port   = 3000                  // Grafana web interface
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = "${var.ip_whitelist}"
+  }
 }

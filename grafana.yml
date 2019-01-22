@@ -1,0 +1,42 @@
+---
+- name: Setup and install Grafana
+  become: True
+  hosts: graphite-frontend
+  tasks:
+    - import_role:
+        name: grafana
+      vars:
+          - grafana_users:
+              allow_sign_up: false
+              auto_assign_org_role: Viewer
+              default_theme: light
+          - grafana_security:
+              admin_user: 'admin'
+              admin_password: 'random'
+          - grafana_auth:
+              disable_login_form: false
+              disable_signout_menu: false
+              anonymous:
+                  org_name: "Unleashed NV"
+                  org_role: Viewer
+          - grafana_plugins:
+              - citilogics-geoloop-panel
+              - fetzerch-sunandmoon-datasource
+              - grafana-clock-panel
+              - grafana-piechart-panel
+              - grafana-worldmap-panel
+              - jdbranham-diagram-panel
+              - marcuscalidus-svg-panel
+              - michaeldmoore-annunciator-panel
+              - mtanda-google-calendar-datasource
+              - natel-discrete-panel
+              - raintank-worldping-app
+              - ryantxu-ajax-panel
+          - grafana_datasources:
+              - name: Graphite
+                type: graphite
+                access: proxy
+                url: "http://localhost:3032/"
+                editable: false
+                jsonData:
+                   graphiteVersion: "1.1"

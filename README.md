@@ -6,7 +6,6 @@ This repository bundles a bunch of Ansible roles to provide a Graphite cluster w
 This project is commissioned by Unleashed NV, you'll also find Terraform scripts in ./tf/ that are used during the development to reflect a more production-like environment.
 
 TODO:
-- Add Grafana frontend
 - Format and mount volumes automatically with Terraform (or Ansible if Terraform does not suffice)
 - Make volumes persistent (do not remove them on `terraform destroy`)
 - Finish Terraform configuration
