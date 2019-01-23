@@ -2,41 +2,67 @@
 - name: Setup and install Grafana
   become: True
   hosts: graphite-frontend
+  vars_files:
+    - vars/grafana_secrets.yml
   tasks:
     - import_role:
         name: grafana
-      vars:
-          - grafana_users:
-              allow_sign_up: false
-              auto_assign_org_role: Viewer
-              default_theme: light
-          - grafana_security:
-              admin_user: 'admin'
-              admin_password: 'random'
-          - grafana_auth:
-              disable_login_form: false
-              disable_signout_menu: false
-              anonymous:
-                  org_name: "Unleashed NV"
-                  org_role: Viewer
-          - grafana_plugins:
-              - citilogics-geoloop-panel
-              - fetzerch-sunandmoon-datasource
-              - grafana-clock-panel
-              - grafana-piechart-panel
-              - grafana-worldmap-panel
-              - jdbranham-diagram-panel
-              - marcuscalidus-svg-panel
-              - michaeldmoore-annunciator-panel
-              - mtanda-google-calendar-datasource
-              - natel-discrete-panel
-              - raintank-worldping-app
-              - ryantxu-ajax-panel
-          - grafana_datasources:
-              - name: Graphite
-                type: graphite
-                access: proxy
-                url: "http://localhost:3032/"
-                editable: false
-                jsonData:
-                   graphiteVersion: "1.1"
+  vars:
+      - grafana_users:
+          allow_sign_up: false
+          auto_assign_org_role: Viewer
+          default_theme: light
+      - grafana_security:
+          admin_user: 'admin'
+          admin_password: 'random'
+      - grafana_auth:
+          disable_login_form: false
+          disable_signout_menu: false
+          anonymous:
+              org_name: "Unleashed NV"
+              org_role: Viewer
+      - grafana_plugins:
+          - citilogics-geoloop-panel
+          - fetzerch-sunandmoon-datasource
+          - grafana-clock-panel
+          - grafana-piechart-panel
+          - grafana-worldmap-panel
+          - jdbranham-diagram-panel
+          - marcuscalidus-svg-panel
+          - michaeldmoore-annunciator-panel
+          - mtanda-google-calendar-datasource
+          - natel-discrete-panel
+          - raintank-worldping-app
+          - ryantxu-ajax-panel
+      - grafana_datasources:
+          - name: Graphite
+            type: graphite
+            access: proxy
+            url: "http://localhost:3032/"
+            editable: false
+            jsonData:
+               graphiteVersion: "1.1"
+          - name: Cloudwatch
+            type: cloudwatch
+            jsonData:
+              authType: keys
+              defaultRegion: eu-west-1
+            secureJsonData:
+              accessKey: "{{ grafana_cloudwatch_accessKey }}"
+              secretKey: "{{ grafana_cloudwatch_secretKey }}"
+      - grafana_dashboards:
+          - dashboard_id: 617
+            revision_id: 3
+            datasource: Cloudwatch
+          - dashboard_id: 623
+            revision_id: 2
+            datasource: Cloudwatch
+          - dashboard_id: 707
+            revision_id: 2
+            datasource: Cloudwatch
+          - dashboard_id: 338
+            revision_id: 6
+            datasource: Graphite
+          - dashboard_id: 947
+            revision_id: 1
+            datasource: Graphite

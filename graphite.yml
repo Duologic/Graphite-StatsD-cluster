@@ -2,6 +2,8 @@
 - name: Setup and install Graphite DB setup
   become: True
   hosts: graphite-storage
+  vars_files:
+    - vars/graphite_secrets.yml
   tasks:
     - import_role:
         name: graphite
@@ -18,6 +20,8 @@
 - name: Setup and install Graphite Frontend setup
   become: True
   hosts: graphite-frontend
+  vars_files:
+    - vars/graphite_secrets.yml
   tasks:
     - import_role:
         name: graphite
