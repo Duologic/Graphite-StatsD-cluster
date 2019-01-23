@@ -21,6 +21,10 @@
           anonymous:
               org_name: "Unleashed NV"
               org_role: Viewer
+      - grafana_metrics:
+          graphite:
+              address: "{{ carbon_server }}:2003"
+              prefix: "prod.grafana.%(instance_name)s."
       - grafana_plugins:
           - citilogics-geoloop-panel
           - fetzerch-sunandmoon-datasource
@@ -65,4 +69,7 @@
             datasource: Graphite
           - dashboard_id: 947
             revision_id: 1
+            datasource: Graphite
+          - dashboard_id: 55
+            revision_id: 3
             datasource: Graphite

@@ -56,6 +56,13 @@ resource "aws_security_group" "allow_carbon" {
     from_port   = 2003
     to_port     = 2004
     protocol    = "tcp"
+    cidr_blocks = ["${formatlist("%s/32", aws_instance.graphite-frontend.*.private_ip)}"]
+  }
+
+  ingress {
+    from_port   = 2003
+    to_port     = 2004
+    protocol    = "tcp"
     cidr_blocks = "${var.ip_whitelist}"
   }
 

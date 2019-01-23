@@ -49,6 +49,7 @@ data "template_file" "ansible_inventory" {
     carbon_caches           = "[${join(",",formatlist("'%s'", aws_instance.graphite-db.*.private_ip))}]"
     cluster_servers         = "[${join(",",formatlist("'%s'", aws_instance.graphite-db.*.private_ip))}]"
     carbon_relay            = "127.0.0.1"
+    carbon_server           = "${aws_instance.monitor-relay.*.private_ip[0]}"
   }
 }
 

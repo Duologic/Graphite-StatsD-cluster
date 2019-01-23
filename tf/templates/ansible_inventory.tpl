@@ -13,6 +13,7 @@ ${graphite-frontend_hosts}
 
 [graphite-frontend:vars]
 cluster_servers=${cluster_servers}
+carbon_server=${carbon_server}
 
 [${env}:children]
 monitor-relay
