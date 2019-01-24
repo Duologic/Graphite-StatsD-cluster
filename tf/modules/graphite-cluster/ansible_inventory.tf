@@ -1,10 +1,6 @@
-provider "local" {
-  version = "~> 1.1"
-}
-
 data "template_file" "inventory-monitor-relay" {
   count    = "${var.monitor-relay_count}"
-  template = "${file("templates/hostname.tpl")}"
+  template = "${file("${path.module}/templates/hostname.tpl")}"
 
   vars {
     name         = "${aws_instance.monitor-relay.*.tags.Name[count.index]}"
@@ -16,7 +12,7 @@ data "template_file" "inventory-monitor-relay" {
 
 data "template_file" "inventory-graphite-db" {
   count    = "${var.graphite-db_count}"
-  template = "${file("templates/hostname.tpl")}"
+  template = "${file("${path.module}/templates/hostname.tpl")}"
 
   vars {
     name         = "${aws_instance.graphite-db.*.tags.Name[count.index]}"
@@ -28,7 +24,7 @@ data "template_file" "inventory-graphite-db" {
 
 data "template_file" "inventory-graphite-frontend" {
   count    = "${var.graphite-frontend_count}"
-  template = "${file("templates/hostname.tpl")}"
+  template = "${file("${path.module}/templates/hostname.tpl")}"
 
   vars {
     name         = "${aws_instance.graphite-frontend.*.tags.Name[count.index]}"
@@ -39,7 +35,7 @@ data "template_file" "inventory-graphite-frontend" {
 }
 
 data "template_file" "ansible_inventory" {
-  template = "${file("templates/ansible_inventory.tpl")}"
+  template = "${file("${path.module}/templates/ansible_inventory.tpl")}"
 
   vars {
     env                     = "${var.aws_profile}"

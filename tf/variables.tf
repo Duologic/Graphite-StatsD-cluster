@@ -19,18 +19,6 @@ variable "aws_availability_zone" {
   default = "eu-west-1b"
 }
 
-variable "monitor-relay_count" {
-  default = 1
-}
-
-variable "graphite-db_count" {
-  default = 2
-}
-
-variable "graphite-frontend_count" {
-  default = 1
-}
-
 variable "aws_base_ami" {
   default = "ami-00035f41c82244dab" // Ubuntu 18.04 LTS
 }

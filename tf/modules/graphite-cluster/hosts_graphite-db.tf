@@ -70,7 +70,7 @@ resource "aws_volume_attachment" "graphite-disk-attach" {
 
 data "template_file" "graphite-disk-user_data" {
   count    = "${var.graphite-db_count}"
-  template = "${file("templates/mount_aws_volume.sh.tpl")}"
+  template = "${file("${path.module}/templates/mount_aws_volume.sh.tpl")}"
 
   vars {
     DEVICE      = "${aws_ebs_volume.graphite-disk.*.tags.Device[count.index]}"
