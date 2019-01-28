@@ -7,7 +7,6 @@ This project is commissioned by Unleashed NV, you'll also find Terraform scripts
 
 TODO:
 - Format and mount volumes automatically with Terraform (or Ansible if Terraform does not suffice)
-- Make volumes persistent (do not remove them on `terraform destroy`)
 - Finish Terraform configuration
 - Expand documentation
 

@@ -59,6 +59,10 @@ resource "aws_ebs_volume" "graphite-disk" {
     DeviceName = "/dev/sdh"
     Device     = "/dev/xvdh"
   }
+
+  lifecycle = {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_volume_attachment" "graphite-disk-attach" {
