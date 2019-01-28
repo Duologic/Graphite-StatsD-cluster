@@ -20,6 +20,7 @@ Vagrant.configure("2") do |config|
                '192.168.34.10',
                '192.168.34.11',
            ],
+           "carbon_server" => '192.168.34.9',
        },
    }
 
@@ -70,12 +71,18 @@ Vagrant.configure("2") do |config|
             v.memory = 1024
         end
         machine.vm.hostname = "graphite-frontend"
+        machine.vm.network "forwarded_port", guest: 3000, host: "3000"
         machine.vm.network "forwarded_port", guest: 3032, host: "3040"
         machine.vm.network "private_network", ip: "192.168.34.20"
         machine.vm.provision :ansible do |ansible|
             ansible.groups = ansible_groups
             ansible.limit = "graphite-frontend"
             ansible.playbook = "graphite.yml"
+        end
+        machine.vm.provision :ansible do |ansible|
+            ansible.groups = ansible_groups
+            ansible.limit = "graphite-frontend"
+            ansible.playbook = "grafana.yml"
         end
     end
 

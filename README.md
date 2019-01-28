@@ -1,31 +1,23 @@
-A Graphite/StatsD setup with Vagrant and Ansible
-================================================
+A Graphite/StatsD cluster
+=========================
 
-This repository bundles a bunch of Ansible roles to provide a Graphite cluster with StatsD and Carbon-relay-ng.
+This repository bundles a bunch of Ansible roles to provide a Graphite cluster with Statsdaemon and Carbon-relay-ng.
 
-This project is commissioned by Unleashed NV, you'll also find Terraform scripts in ./tf/ that are used during the development to reflect a more production-like environment.
-
-TODO:
-- Format and mount volumes automatically with Terraform (or Ansible if Terraform does not suffice)
-- Finish Terraform configuration
-- Expand documentation
+For Unleashed NV, I'm developing a set of Terraform playbooks with its own [documentation](tf/README.md).
 
 Requirements
 ------------
 
-- Vagrant (tested with VirtualBox)
-- Ansible (tested with Python 3 virtualenv)
+- [Ansible](https://docs.ansible.com/)
+- [Vagrant](https://www.vagrantup.com/)
+- [VirtualBox](https://www.virtualbox.org/)
 - this git repo + submodules
 
-I've been working from a macOS machine, here are the installation instructions for that:
+I've been working from a macOS machine, here are the installation instructions with [Homebrew](https://brew.sh/):
 
-    brew cask install vagrant
+    brew install ansible
     brew cask install virtualbox
-
-    brew install python
-    python3 -m venv .venv
-    source .venv/bin/activate
-    pip install ansible
+    brew cask install vagrant
 
     git clone git@github.com:Duologic/vagrant-ansible-graphite-statsd.git
     git submode update --init
@@ -33,15 +25,28 @@ I've been working from a macOS machine, here are the installation instructions f
 Let's go
 --------
 
+In `vars/` you'll find ansible-vault encrypted configuration, you might want to replace those as you can't read them:
+
+    # cat vars/grafana_secrets.yml
+    grafana_admin_password: 'XXX'
+    grafana_cloudwatch_accessKey: 'XXX'
+    grafana_cloudwatch_secretKey: 'XXX'
+
+    # cat vars/graphite_secrets.yml
+    graphite_secret_key: 'XXX'
+    graphite_admin_password: 'XXX'
+
 You should now have an environment that would allow you to spin up a Graphite cluster:
 
     vagrant up
 
+Surf to https://localhost:3000/
+
 Important files
 ---------------
 
+- ./ansible.cfg: the inventory file is referenced here, I prefer my own SSH config so I override the defaults here
 - Vagrantfile: glues the VMs together and creates an Ansible inventory
-- ./ansible.cfg: the inventory file is referenced here, I prefer my own SSH config so I override the defaults here too
 
 License
 -------
