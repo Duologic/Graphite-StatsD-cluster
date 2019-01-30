@@ -25,6 +25,13 @@
           graphite:
               address: "{{ carbon_server }}:2003"
               prefix: "prod.grafana.%(instance_name)s."
+      - grafana_image_storage:
+              provider: 's3'
+              bucket: 'unleashed-staging-monitoring'
+              region: 'eu-west-1'
+              path: 'external_image_storage'
+              access_key: '{{ grafana_aws_accessKey }}'
+              secret_key: '{{ grafana_aws_secretKey }}'
       - grafana_plugins:
           - citilogics-geoloop-panel
           - fetzerch-sunandmoon-datasource
@@ -52,8 +59,8 @@
               authType: keys
               defaultRegion: eu-west-1
             secureJsonData:
-              accessKey: "{{ grafana_cloudwatch_accessKey }}"
-              secretKey: "{{ grafana_cloudwatch_secretKey }}"
+              accessKey: "{{ grafana_aws_accessKey }}"
+              secretKey: "{{ grafana_aws_secretKey }}"
       - grafana_dashboards:
           - dashboard_id: 617
             revision_id: 3
