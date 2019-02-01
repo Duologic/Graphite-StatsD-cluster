@@ -19,7 +19,7 @@ I've been working from a macOS machine, here are the installation instructions w
     brew cask install virtualbox
     brew cask install vagrant
 
-    git clone git@github.com:Duologic/vagrant-ansible-graphite-statsd.git
+    git clone git@github.com:Duologic/Graphite-StatsD-cluster.git
     git submode update --init
 
 Let's go
