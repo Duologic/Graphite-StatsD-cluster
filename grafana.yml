@@ -80,3 +80,5 @@
           - dashboard_id: 55
             revision_id: 3
             datasource: Graphite
+            variables:
+                VAR_PREFIX: 'prod.grafana'

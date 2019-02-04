@@ -12,4 +12,4 @@
 	url = git@github.com:Duologic/ansible-role-carbon-relay-ng.git
 [submodule "roles/grafana"]
 	path = roles/grafana
-	url = git@github.com:cloudalchemy/ansible-grafana.git
+	url = git@github.com:Duologic/ansible-grafana.git
