@@ -3,7 +3,7 @@
 	url = git@github.com:Duologic/ansible-graphite.git
 [submodule "roles/packagecloud"]
 	path = roles/packagecloud
-	url = git@github.com:Duologic/packagecloud-ansible-role.git
+	url = git@github.com:computology/packagecloud-ansible-role.git
 [submodule "roles/statsdaemon"]
 	path = roles/statsdaemon
 	url = git@github.com:Duologic/ansible-role-statsdaemon.git
