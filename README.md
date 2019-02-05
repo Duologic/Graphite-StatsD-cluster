@@ -11,6 +11,7 @@ Requirements
 - [Ansible](https://docs.ansible.com/)
 - [Vagrant](https://www.vagrantup.com/)
 - [VirtualBox](https://www.virtualbox.org/)
+- Postgresql database (for Grafana)
 - this git repo + submodules
 
 I've been working from a macOS machine, here are the installation instructions with [Homebrew](https://brew.sh/):
@@ -25,14 +26,21 @@ I've been working from a macOS machine, here are the installation instructions w
 Let's go
 --------
 
-In `vars/` you'll find ansible-vault encrypted configuration, you might want to replace those as you can't read them:
+In `group_vars/` you'll find ansible-vault encrypted configuration,
+you might want to replace those as you can't read them:
 
-    # cat vars/grafana_secrets.yml
+    # ansible-vault view group_vars/graphite-frontend.yml
+    postgresql_host: 'db.example.com'
+    postgresql_port: 5432
+    postgresql_admin_user: 'postgres'
+    postgresql_admin_password: 'XXX'
+
+    grafana_db_password: 'XXX'
     grafana_admin_password: 'XXX'
     grafana_cloudwatch_accessKey: 'XXX'
     grafana_cloudwatch_secretKey: 'XXX'
 
-    # cat vars/graphite_secrets.yml
+    # ansible-vault view group_vars/graphite.yml
     graphite_secret_key: 'XXX'
     graphite_admin_password: 'XXX'
 

@@ -46,6 +46,9 @@ data "template_file" "ansible_inventory" {
     cluster_servers         = "[${join(",",formatlist("'%s'", aws_instance.graphite-db.*.private_ip))}]"
     carbon_relay            = "127.0.0.1"
     carbon_server           = "${aws_instance.monitor-relay.*.private_ip[0]}"
+    postgresql_host         = "${data.aws_db_instance.monitoring.address}"
+    postgresql_port         = "${data.aws_db_instance.monitoring.port}"
+    postgresql_admin_user   = "${data.aws_db_instance.monitoring.master_username}"
   }
 }
 

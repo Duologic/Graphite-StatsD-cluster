@@ -2,12 +2,48 @@
 - name: Setup and install Grafana
   become: True
   hosts: graphite-frontend
-  vars_files:
-    - vars/grafana_secrets.yml
+  pre_tasks:
+      - name: Install psycopg2
+        package: name=python-psycopg2 state=present
+      - name: Setup grafana role/user
+        postgresql_user:
+          name: '{{ grafana_database.user }}'
+          password: '{{ grafana_database.password }}'
+          no_password_changes: true
+          port: '{{ postgresql_port }}'
+          login_host: '{{ postgresql_host }}'
+          login_user: '{{ postgresql_admin_user }}'
+          login_password: '{{ postgresql_admin_password }}'
+          db: "postgres"
+      - name: Grant grafana role to admin
+        postgresql_privs:
+          type: group
+          objs: '{{ grafana_database.user }}'
+          role: '{{ postgresql_admin_user }}'
+          port: '{{ postgresql_port }}'
+          login_host: '{{ postgresql_host }}'
+          login_user: '{{ postgresql_admin_user }}'
+          login_password: '{{ postgresql_admin_password }}'
+          db: "postgres"
+      - name: Setup grafana database
+        postgresql_db:
+          name: '{{ grafana_database.name }}'
+          owner: '{{ grafana_database.user }}'
+          port: '{{ postgresql_port }}'
+          login_host: '{{ postgresql_host }}'
+          login_user: '{{ postgresql_admin_user }}'
+          login_password: '{{ postgresql_admin_password }}'
+          db: "postgres"
   tasks:
     - import_role:
         name: grafana
   vars:
+      - grafana_database:
+          type: 'postgres'
+          name: 'grafana'
+          user: 'grafana'
+          password: '{{ grafana_db_password }}'
+          host: '{{ postgresql_host }}:{{ postgresql_port }}'
       - grafana_users:
           allow_sign_up: false
           auto_assign_org_role: Viewer

@@ -18,7 +18,7 @@ I've been working from a macOS machine, here are the installation instructions w
     brew install ansible
     brew install terraform
 
-    git clone git@github.com:Duologic/vagrant-ansible-graphite-statsd.git
+    git clone git@github.com:Duologic/Graphite-StatsD-cluster.git
     git submode update --init
 
 For Terraform/AWS configuration, get an IAM user with at EC2 access and put the credentials here `$HOME/.aws/credentials`:
@@ -30,14 +30,16 @@ For Terraform/AWS configuration, get an IAM user with at EC2 access and put the 
 Let's go
 --------
 
-In `vars/` you'll find ansible-vault encrypted configuration, you might want to replace those as you can't read them:
+In `group_vars/` you'll find ansible-vault encrypted configuration, you might want to replace those as you can't read them:
 
-    # cat vars/grafana_secrets.yml
+    # ansible-vault view group_vars/graphite-frontend.yml
+    postgresql_admin_password: 'XXX'
+    grafana_db_password: 'XXX'
     grafana_admin_password: 'XXX'
     grafana_cloudwatch_accessKey: 'XXX'
     grafana_cloudwatch_secretKey: 'XXX'
 
-    # cat vars/graphite_secrets.yml
+    # ansible-vault view group_vars/graphite.yml
     graphite_secret_key: 'XXX'
     graphite_admin_password: 'XXX'
 

@@ -22,6 +22,7 @@ Vagrant.configure("2") do |config|
            ],
            "carbon_server" => '192.168.34.9',
        },
+       "graphite:children" => ["graphite-frontend", "graphite-storage"],
    }
 
     # monitor-relay node

@@ -29,6 +29,18 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
+resource "aws_security_group" "allow_postgresql" {
+  name        = "allow_postgresql"
+  description = "Allow Postgresql from graphite-frontend servers"
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["${formatlist("%s/32", aws_instance.graphite-frontend.*.private_ip)}"]
+  }
+}
+
 resource "aws_security_group" "allow_statsd" {
   name        = "allow_statsd"
   description = "Allow StatsD inputs from home/offices"
