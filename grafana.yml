@@ -98,22 +98,28 @@
               accessKey: "{{ grafana_aws_accessKey }}"
               secretKey: "{{ grafana_aws_secretKey }}"
       - grafana_dashboards:
-          - dashboard_id: 617
+          - name: AWS EC2
+            dashboard_id: 617
             revision_id: 3
             datasource: Cloudwatch
-          - dashboard_id: 623
+          - name: AWS EBS
+            dashboard_id: 623
             revision_id: 2
             datasource: Cloudwatch
-          - dashboard_id: 707
+          - name: AWS RDS
+            dashboard_id: 707
             revision_id: 2
             datasource: Cloudwatch
-          - dashboard_id: 338
+          - name: Carbon-relay-ng
+            dashboard_id: 338
             revision_id: 6
             datasource: Graphite
-          - dashboard_id: 947
+          - name: Graphite Server (Carbon Metrics)
+            dashboard_id: 947
             revision_id: 1
             datasource: Graphite
-          - dashboard_id: 55
+          - name: Internal Grafana Stats
+            dashboard_id: 55
             revision_id: 3
             datasource: Graphite
             variables:
